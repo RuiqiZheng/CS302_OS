@@ -11,8 +11,8 @@ void *reader(int *buffer){
     if (!readcount)
     {
         sem_wait(&db);
+        readcount++;
     }
-    readcount++;
     sem_post(&rc);
     sem_wait(&rc);
     readcount--;
