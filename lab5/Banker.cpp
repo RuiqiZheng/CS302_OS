@@ -89,7 +89,7 @@ bool try_request(std::vector<int> &max_q,
 
 int main() {
 #ifdef DEBUG
-    freopen("/home/wavator/Desktop/CS302_OS/lab5/sample.in", "r", stdin);
+    freopen("/home/wavator/Desktop/CS302_OS/lab5/test.in", "r", stdin);
     freopen("/home/wavator/Desktop/CS302_OS/lab5/result.out", "w", stdout);
 #endif
     int r;
