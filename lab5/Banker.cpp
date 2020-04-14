@@ -87,10 +87,6 @@ bool try_request(std::vector<int> &max_q,
     return true;
 }
 
-/*
- * max_q: remain
- *
- * */
 int main() {
 #ifdef DEBUG
     freopen("/home/wavator/Desktop/CS302_OS/lab5/sample.in", "r", stdin);

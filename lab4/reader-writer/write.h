@@ -6,8 +6,8 @@ void *writer(int *buffer){
     // You should implement this using semaphore
 
     // You should output this just after this thread gets semaphore
-    sem_wait(&db);
     printf("writer gets sem\n");
+    sem_wait(&db);
     (*buffer)++;
     // you should output this just before this thread releases the semaphore
     printf("writer writes %d and releases\n", *buffer);
