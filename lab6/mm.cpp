@@ -7,7 +7,12 @@ using namespace std;
 #define MIN_SLICE 10 //内碎片最大大小
 #define DEFAULT_MEM_SIZE 1024  //总内存大小
 #define DEFAULT_MEM_START 0  //内存开始分配时的起始地址
-
+#ifdef Wavator
+int DEBUG_COUNT = 0;
+#define debug(...) cerr << "DEBUG_" << ++DEBUG_COUNT << ": " << #__VA_ARGS__ << " = " << __VA_ARGS__ << endl
+#else
+#define debug(...) 99
+#endif
 typedef pair<int, string> My_algo;
 
 int mem_size = DEFAULT_MEM_SIZE;
@@ -49,11 +54,11 @@ int dispose(allocated_block *ab); //释放分配块结构体
 void display_mem_usage(); //显示内存情况
 void kill_process(); //杀死对应进程并释放其空间与结构体
 void Usemy_algo(int id); //使用对应的分配算法
-bool first_fit(free_block *, free_block *, allocated_block *);
-bool best_fit(free_block *, free_block *, allocated_block *);
-bool worst_fit(free_block *, free_block *, allocated_block *);
+bool first_fit(free_block* &pre, free_block* &now, allocated_block* &ab);
+bool best_fit(free_block* &pre, free_block* &now, allocated_block* &ab);
+bool worst_fit(free_block* &pre, free_block* &now, allocated_block* &ab);
 int curr_alg;
-bool (*algo_func[123])(free_block *, free_block *, allocated_block *) = {
+bool (*algo_func[123])(free_block *&, free_block *&, allocated_block *&) = {
         first_fit,
         best_fit,
         worst_fit
@@ -100,6 +105,9 @@ int main() {
             }
             defaut:
                 break;
+        }
+        if (op >= 1 && op <= 5) {
+            flag = 1;
         }
     }
 }
@@ -156,6 +164,8 @@ int allocate_mem(allocated_block *ab) { //为块分配内存，真正的操作�
     if (free_block_head) {
         free_block *pre = free_block_head, *now = free_block_head;
         bool has_space = algo_func[curr_alg](pre, now, ab);
+        debug(algo[curr_alg].second);
+        debug(has_space);
         if (has_space) {
             free_block *nblock = (free_block *) malloc(sizeof(free_block));
             nblock->start_addr = now->start_addr + ab->size;
@@ -196,11 +206,9 @@ int allocate_mem(allocated_block *ab) { //为块分配内存，真正的操作�
             ab->next = NULL;
             return 1;
         } else {
-            puts("No free memory now!");
             return -1;
         }
     } else {
-        puts("No free memory now!");
         return -1;
     }
 }
@@ -214,8 +222,11 @@ int create_new_process(){ //创建新进程
         allocated_block *ab = (allocated_block *) malloc(sizeof(allocated_block));
         ab->size = mem_sz;
         ab->pid = ++pid;
-        allocate_mem(ab);
-        printf("Successfully create process%d\n", pid);
+        if (allocate_mem(ab) != -1) {
+            printf("Successfully create process%d\n", pid);
+        } else {
+            puts("No free memory");
+        }
         return pid;
     } else {
         puts("Memory size must be greater than 0.");
@@ -338,7 +349,7 @@ void Usemy_algo(int id) {
 }
 
 bool first_fit(free_block* &pre, free_block* &now, allocated_block* &ab) {
-    for (int aim = ab->start_addr; now != NULL; now = now->next) {
+    for (int aim = ab->size; now != NULL; now = now->next) {
         if (now->size >= aim) {
             ab->start_addr = now->start_addr;
             return true;
