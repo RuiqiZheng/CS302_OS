@@ -98,8 +98,7 @@ private:
                 ++hit;
             } else {
                 if (q.size() == K) {
-                    int pos_mx = -1;
-                    list<int>::iterator num_mx_itr;
+                    int pos_mx = -1, mx = -1;
                     for (auto &iter : last_ite) {
                         bool flag = true;
                         for (auto it = rev_MIN[iter.first].begin(); it != rev_MIN[iter.first].end() && flag;
@@ -108,9 +107,9 @@ private:
                                 rev_MIN[iter.first].pop_front();
                                 continue;
                             }
-                            if (*it > *num_mx_itr) {
+                            if (*it > mx) {
+                                mx = *it;
                                 pos_mx = iter.first;
-                                num_mx_itr = it;
                             }
                             flag = false;
                         }
@@ -118,18 +117,19 @@ private:
                     q.erase(last_ite[pos_mx]);
                     last_ite.erase(pos_mx);
                 }
-                q.push_back(order[order[i]]);
-                last_ite[order[order[i]]] = --q.end();
+                q.push_back(order[i]);
+                last_ite[order[i]] = --q.end();
             }
         }
         return hit;
     }
-
+    //TODO
     int algorithm_clock() const {
         int hit = 0;
 
         return hit;
     }
+    //TODO
     int algorithm_second_chance() const{
         int hit = 0;
 
@@ -142,7 +142,9 @@ int main() {
     cin.tie(nullptr);
     int K, A, N;
     #ifdef Wavator
-    for (auto & TestFile : TestFiles) {
+    int T = TestFiles.size();
+    for (int t = 0; t < T; ++t) {
+        auto TestFile = TestFiles[t];
         sprintf(FILEPATH, "%s/%s", ROOT, TestFile.c_str());
         ifstream _stream;
         _stream.open(FILEPATH);
@@ -153,8 +155,10 @@ int main() {
         }
         puts(TestFile.c_str());
         for (int i = 0; i < 5; ++i) {
-            printf("A = %d\n", i);
-            (new Solver(K, i, N, order))->solve();
+            printf("A = %d:\t", i);
+            auto solver = new Solver(K, i, N, order);
+            solver->solve();
+            delete solver;
         }
     }
     #else
