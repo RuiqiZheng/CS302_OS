@@ -91,7 +91,10 @@ private:
         list<int> q;
         unordered_map<int, list<int>> rev_MIN;
         for (int i = 0; i < N; ++i) {
-            rev_MIN.emplace(order[i],list<int>{i, INF});
+            rev_MIN[order[i]].push_back(i);
+        }
+        for (int i = 0; i < N; ++i) {
+            rev_MIN[order[i]].push_back(INF);
         }
         for (int i = 0; i < N; ++i) {
             if (last_ite.count(order[i])) {
@@ -102,9 +105,10 @@ private:
                     for (auto &iter : last_ite) {
                         bool flag = true;
                         for (auto it = rev_MIN[iter.first].begin(); it != rev_MIN[iter.first].end() && flag;
-                             it = rev_MIN[iter.first].begin()) {
+                             ) {
                             if (*it < i) {
                                 rev_MIN[iter.first].pop_front();
+                                it = rev_MIN[iter.first].begin();
                                 continue;
                             }
                             if (*it > mx) {
@@ -114,6 +118,7 @@ private:
                             flag = false;
                         }
                     }
+                    //debug(pos_mx);
                     q.erase(last_ite[pos_mx]);
                     last_ite.erase(pos_mx);
                 }
