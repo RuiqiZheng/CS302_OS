@@ -9,21 +9,6 @@ char FILEPATH[50];
 #else
 #define debug(...) 99
 #endif
-namespace Quick_in {
-    const int LEN = (1 << 21) + 1;
-    char ibuf[LEN], *iH, *iT;
-    int f, c;
-#define gc() (iH==iT?(iT=(iH=ibuf)+fread(ibuf,1,LEN,stdin),(iH==iT?EOF:*iH++)):*iH++)
-    template<class T>
-    inline void sc(T &x) {
-        for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
-        for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15);
-        x *= f;
-    }
-}
-
-using Quick_in::sc;
-
 typedef vector<int> vi;
 
 class Solver {
