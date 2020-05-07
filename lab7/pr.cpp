@@ -9,6 +9,21 @@ char FILEPATH[50];
 #else
 #define debug(...) 99
 #endif
+namespace Quick_in {
+    const int LEN = (1 << 21) + 1;
+    char ibuf[LEN], *iH, *iT;
+    int f, c;
+#define gc() (iH==iT?(iT=(iH=ibuf)+fread(ibuf,1,LEN,stdin),(iH==iT?EOF:*iH++)):*iH++)
+    template<class T>
+    inline void sc(T &x) {
+        for (f = 1, c = gc(); c < '0' || c > '9'; c = gc()) if (c == '-') f = -1;
+        for (x = 0; c <= '9' && c >= '0'; c = gc()) x = x * 10 + (c & 15);
+        x *= f;
+    }
+}
+
+using Quick_in::sc;
+
 typedef vector<int> vi;
 
 class Solver {
@@ -224,8 +239,6 @@ private:
 };
 
 int main() {
-    istream::sync_with_stdio(false);
-    cin.tie(nullptr);
     int K, A, N;
     #ifdef Wavator
     int T = TestFiles.size();
@@ -253,10 +266,12 @@ int main() {
         }
     }
     #else
-    cin >> K >> A >> N;
+    sc(K);
+    sc(A);
+    sc(N);
     vi order(N);
     for (int i = 0; i < N; ++i) {
-        cin >> order[i];
+        sc(order[i]);
     }
     (new Solver(K, A, N, order))->solve();
     #endif
