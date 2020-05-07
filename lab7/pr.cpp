@@ -241,6 +241,7 @@ private:
 int main() {
     int K, A, N;
     #ifdef Wavator
+    istream::sync_with_stdio(false);
     int T = TestFiles.size();
     for (int t = 0; t < T; ++t) {
         auto TestFile = TestFiles[t];
@@ -266,12 +267,10 @@ int main() {
         }
     }
     #else
-    sc(K);
-    sc(A);
-    sc(N);
+    scanf("%d%d%d", &K, &A, &N);
     vi order(N);
     for (int i = 0; i < N; ++i) {
-        sc(order[i]);
+        scanf("%d", &order[i]);
     }
     (new Solver(K, A, N, order))->solve();
     #endif
