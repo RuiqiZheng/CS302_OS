@@ -1,3 +1,4 @@
+#pragma GCC optimize("O3")
 #include <bits/stdc++.h>
 using namespace std;
 #ifdef Wavator
@@ -255,5 +256,3 @@ int main() {
     #endif
     return 0;
 }
-
-
