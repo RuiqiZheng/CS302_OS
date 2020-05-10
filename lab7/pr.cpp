@@ -10,6 +10,14 @@ char FILEPATH[50];
 #define debug(...) 99
 #endif
 typedef vector<int> vi;
+inline void scan(int &x) {
+    char ch = getchar();
+    for (x = 0; ch < '0' || '9' < ch; ch = getchar());
+    while ('0' <= ch && ch <= '9') {
+        x = x * 10 + ch - 48;
+        ch = getchar();
+    }
+}
 
 class Solver {
 public:
@@ -94,44 +102,28 @@ private:
     int algorithm_min() const {
         static const int INF = 0x3f3f3f3f;
         int hit = 0;
-        unordered_map<int, list<int>::iterator> last_ite;
-        list<int> q;
-        unordered_map<int, list<int>> rev_MIN;
-        for (int i = 0; i < N; ++i) {
-            rev_MIN[order[i]].push_back(i);
+        vi nxt(N, INF);
+        unordered_map<int, int> nxt_pos;
+        for (int i = N - 1; i >= 0; i--) {
+            if (nxt_pos.count(order[i])) {
+                nxt[i] = nxt_pos[order[i]];
+            }
+            nxt_pos[order[i]] = i;
         }
+        unordered_set<int> ht;
+        set<pair<int,int> > st;
         for (int i = 0; i < N; ++i) {
-            rev_MIN[order[i]].push_back(INF);
-        }
-        for (int i = 0; i < N; ++i) {
-            if (last_ite.count(order[i])) {
+            int od(order[i]), nx(nxt[i]);
+            if (ht.count(od)) {
                 ++hit;
             } else {
-                if (q.size() == K) {
-                    int pos_mx = -1, mx = -1;
-                    for (auto &iter : last_ite) {
-                        bool flag = true;
-                        for (list<int>::iterator it = rev_MIN[iter.first].begin(); it != rev_MIN[iter.first].end() && flag;
-                             ) {
-                            if (*it < i) {
-                                rev_MIN[iter.first].pop_front();
-                                it = rev_MIN[iter.first].begin();
-                                continue;
-                            }
-                            if (*it > mx) {
-                                mx = *it;
-                                pos_mx = iter.first;
-                            }
-                            flag = false;
-                        }
-                    }
-                    //debug(pos_mx);
-                    q.erase(last_ite[pos_mx]);
-                    last_ite.erase(pos_mx);
+                if (ht.size() == K) {
+                    ht.erase(st.begin()->second);
+                    st.erase(st.begin());
                 }
-                q.push_back(order[i]);
-                last_ite[order[i]] = --q.end();
+                ht.emplace(od);
             }
+            st.emplace(-nx, od);
         }
         return hit;
     }
@@ -222,7 +214,7 @@ private:
         return hit;
     }
 };
-
+#undef Wavator
 int main() {
     int K, A, N;
     #ifdef Wavator
@@ -252,14 +244,14 @@ int main() {
         }
     }
     #else
-    scanf("%d%d%d", &K, &A, &N);
+    scan(K);
+    scan(A);
+    scan(N);
     vi order(N);
     for (int i = 0; i < N; ++i) {
-        scanf("%d", &order[i]);
+        scan(order[i]);
     }
     (new Solver(K, A, N, order))->solve();
     #endif
     return 0;
 }
-
-
