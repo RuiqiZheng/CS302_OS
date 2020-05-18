@@ -1,2 +1,2 @@
 # CS302_OS
-OS lab code(no explain)
+SUSTech OS lab code(don't use it as your lab work).
