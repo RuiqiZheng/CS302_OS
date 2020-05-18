@@ -1,31 +1,28 @@
 #include <bits/stdc++.h>
 using namespace std;
 int main() {
-    //assert(freopen("data/2.in","r",stdin));
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr), cout.tie(nullptr);
     int n, m, s;
     vector<int> l, r;
-    cin >> s >> m >> n;
+    scanf("%d%d%d", &s, &m, &n);
     for (int i = 0, j; i < n; ++i) {
-        cin >> j;
-        (j > s? r: l).push_back(j);
+        scanf("%d", &j);
+        (j > s ? r : l).push_back(j);
     }
     sort(l.rbegin(), l.rend());
     sort(r.rbegin(), r.rend());
     if (!l.empty()) {
-        cout << s << ' ';
+        printf("%d ",s);
     }
     for (auto &x: l) {
-        cout << x << ' ';
+        printf("%d ", x);
     }
     for (auto &x: r) {
-        cout << x << ' ';
+        printf("%d ", x);
     }
     int ans = l.empty()? 0: s - l.back();
     if (!r.empty()) {
         ans += r[0] - (l.empty()? s: l.back()) + r[0] - r.back();
     }
-    cout << '\n' << ans << endl;
+    printf("\n%d\n", ans);
     return 0;
 }
